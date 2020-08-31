@@ -10,8 +10,25 @@
     import Home from './routes/Home.svelte'
     import Album from './routes/Album.svelte'
     import NotFound from './routes/NotFound.svelte'
-
-    $: album.set( $location.split('/').slice(2).join('/') ) // Ha Ha
+/*
+    $: { if (album) {
+      console.log(`App album changed: ${album}`)
+      console.dir(album)
+      }
+    }
+*/
+  let menuItem
+  $: { 
+    menuItem = $location.split('/').slice(2).join('/')
+    if ( menuItem ) {
+      console.log(`App menuItem: ${menuItem}`)
+      album.set( menuItem )
+    }
+  }
+     // album.set( $location.split('/').slice(2).join('/') ) // Ha Ha
+     // console.log(`App album set: ${album}`)
+     // console.dir(album)
+  
     // $: activate( $album || $querystring )
 
 
@@ -25,13 +42,15 @@
 
         let menuBar = document.querySelector( '.menu' )
         menuHeight.set( menuBar.clientHeight )
-        console.log(`Mbar mounted`)
+        console.log(`menuBar mounted. App:Albums:`)
+        console.dir(Albums)
+
     })
 
 
     const routes = {
       '/': Home,
-      '/album/:name': Album,
+      '/album/:name': Album, // named parameter 'name' picked up at route 'Album'
       '*': NotFound
     }
 

@@ -3,31 +3,23 @@
     import { fade } from 'svelte/transition'
     import { location, querystring, push, pop, replace } from 'svelte-spa-router'
     import { bkt, menuHeight, album, pic } from '../stores.js'
-    // import xtype from 'xtypejs'
-    // let xtype = require('xtypejs')
 
     let albumManifesto
     let backdrop
       , backdropStyle
-  
-      ///, bdPortrait
       , bdW
       , bdH
-    
     let pixList = []
       , Pic
       , picStyle
       , picW
       , picH
-      
-      , jSrc
-      , kSrc
-      , isJay = false
-
       , isPortrait
       , portrait
       , landscape
-
+    let jSrc
+      , kSrc
+      , isJay = false
     let navIcon
       , isNorth
       , isWest
@@ -39,25 +31,14 @@
       jSrc = `${bkt}/${$album}/${$querystring}` 
       kSrc = `${bkt}/${$album}/${$querystring}`
     }
-
-    
     $: albumManifesto = `${ bkt+'/'+$album+'/manifesto.json'}`
 
-
-    const getCatalogue = async ( manifesto ) => {
-      let res = await fetch ( manifesto )
-      if ( res.ok ) {
-        let json = await res.json()
-        json.images.forEach( image => {
-          pixList.push( image )
-        })
-      }
-    }
-    
 
   /***********************    on Mount Event    *************************/
     onMount(async () => {
       
+      console.log(`Image onMount album: ${album}, ${$album}`)
+
       await getCatalogue( `${ bkt+'/'+$album+'/manifesto.json'}` )
       
       if (isNaN(index)) 
@@ -68,14 +49,19 @@
       backdropStyle = await getComputedStyle( backdrop )
       bdW = await parseInt(backdropStyle.getPropertyValue("width"), 10)
       bdH = await parseInt(backdropStyle.getPropertyValue("height"), 10)
-      //bdAspect = bdH / bdW
-      // bdPortrait = (bdH/bdW)>1 ? true : false
-      //if ( bdAspect < 1 )
+
       console.log(`HULLO on Mount backdrop W: ${bdW}, H: ${bdH}`)
-
-
     }) // END onMount
 
+    const getCatalogue = async ( manifesto ) => {
+      let res = await fetch ( manifesto )
+      if ( res.ok ) {
+        let json = await res.json()
+        json.images.forEach( image => {
+          pixList.push( image )
+        })
+      }
+    }
  
   /***********************    window Resize event    *************************/    
     window.addEventListener( 'resize', () => {
@@ -143,6 +129,9 @@
 
       } else if (clkt === 'south') {
         console.log(`clicked ${clkt}`)
+
+
+
       }
     }
 
